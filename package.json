@@ -1,0 +1,36 @@
+{
+  "name": "attendee-application-back-end",
+  "version": "1.0.0",
+  "description": "REST API for SLO Hacks Application System",
+  "main": "index.js",
+  "author": "SLO Hacks",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "lint": "standard ./src/**/*.js"
+  },
+  "dependencies": {
+    "@sendgrid/mail": "^6.4.0",
+    "bcrypt": "^3.0.6",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.11",
+    "mongodb": "^3.2.7",
+    "mongoose": "^5.6.3",
+    "morgan": "^1.9.1",
+    "multer": "^1.4.1",
+    "passport": "^0.4.0",
+    "validator": "^11.1.0"
+  },
+  "devDependencies": {
+    "cz-conventional-changelog": "^2.1.0",
+    "nodemon": "^1.19.1",
+    "standard": "^12.0.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  }
+}
