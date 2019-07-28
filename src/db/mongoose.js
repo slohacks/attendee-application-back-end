@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-mongoose.connect('MONGO URL HERE', {
+mongoose.connect('mongodb://127.0.0.1:27017/slohacks-backend-api', {
   useNewUrlParser: true,
   useCreateIndex: true
 }).then(() => {

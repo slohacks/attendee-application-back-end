@@ -1,12 +1,16 @@
 const express = require('express')
+const jwt = require('jsonwebtoken')
 const User = require('../models/User')
+const EmailRequest = require('../models/EmailRequestModel')
 const router = new express.Router()
 
 // Post request to add user to database. Expects all required fields in User Schema
 router.post('/users/signup', async (req, res) => {
   const user = new User(req.body)
+  console.log(user)
   try {
     await user.save()
+    const token = jwt.sign({ email: user.email }, 'SECRETWILLBEHERE', { expiresIn: 60 })
     res.status(201).send(user)
   } catch (e) {
     res.status(400).send(e)

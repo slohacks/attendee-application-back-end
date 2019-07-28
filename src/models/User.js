@@ -26,16 +26,12 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  verifyKey: {
-    type: String,
-    default: null
-  },
   resetPasswordKey: {
     type: String,
     default: null
   },
   verifyTime: {
-    type: String,
+    type: Date,
     default: null
   },
   resetPasswordTime: {
