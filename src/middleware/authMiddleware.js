@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const User = require('../models/User')
+const User = require('../models/UserModel')
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -15,7 +15,7 @@ const authMiddleware = async (req, res, next) => {
     req.user = user
     next()
   } catch (e) {
-    res.status(401).send({ errorMessage: e.message })
+    res.status(401).send({ errorMessage: "Couldn't authenticate the user" })
   }
 }
 
