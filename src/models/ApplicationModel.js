@@ -1,8 +1,6 @@
-// import modules
 const mongoose = require('mongoose')
 const validator = require('validator')
 
-// class definition
 const Application = mongoose.model('Application', {
   name: {
     type: String,
@@ -11,14 +9,13 @@ const Application = mongoose.model('Application', {
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    default: null
+    required: true
   },
   gender: {
-    type: String,
+    type: Number,
     required: true,
     min: 0,
-    max: 4
+    max: 3
   },
   major: {
     type: String,
@@ -41,17 +38,15 @@ const Application = mongoose.model('Application', {
   },
   timestamp: {
     type: Date,
+    default: Date.now(),
     required: true
   },
-  grad_date: { // dateInput?
-    // mongoose stores dates in the format "1987-09-28"
-    // potentially just store grad year
-    // potentially delete this field
+  grad_date: {
     type: Number,
     required: true,
     trim: true
   },
-  grade: {
+  classYear: {
     type: Number,
     required: true,
     min: 1,
@@ -114,10 +109,4 @@ const Application = mongoose.model('Application', {
   }
 })
 
-// export Application model
 module.exports = Application
-
-// NOTES
-//  molter for resume field
-//  blacklist things like "".:)(/" to clean textInput?
-//  lowercase for text input?

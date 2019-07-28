@@ -1,7 +1,7 @@
 const express = require('express')
 const jwt = require('jsonwebtoken')
-const User = require('../models/User')
 const EmailRequest = require('../models/EmailRequestModel')
+const User = require('../models/UserModel')
 const router = new express.Router()
 
 // Post request to add user to database. Expects all required fields in User Schema
