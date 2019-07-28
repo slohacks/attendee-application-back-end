@@ -1,5 +1,5 @@
 const express = require('express')
-const User = require('../models/User')
+const User = require('../models/UserModel')
 const router = new express.Router()
 
 // Post request to add user to database. Expects all required fields in User Schema
