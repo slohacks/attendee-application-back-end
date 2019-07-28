@@ -1,7 +1,7 @@
 const express = require('express')
 const jwt = require('jsonwebtoken')
 const EmailRequest = require('../models/EmailRequestModel')
-const User = require('../models/User')
+const User = require('../models/UserModel')
 const router = new express.Router()
 
 router.post('/emails/resend', async (req, res) => {
@@ -19,7 +19,7 @@ router.post('/emails/resend', async (req, res) => {
       await existingEmailRequest.remove()
     }
 
-    const verificationToken = jwt.sign({ email }, 'SECRETWILLBEHERE', { expiresIn: 60 })
+    const verificationToken = jwt.sign({ email }, 'SECRETWILLBEHERE', { expiresIn: 3600 })
     const newEmailRequest = new EmailRequest({ token: verificationToken, owner: user._id })
     await newEmailRequest.save()
     res.status(200).send({})
@@ -49,7 +49,9 @@ router.post('/emails/confirm/:token', async (req, res) => {
     await user.save()
     res.status(200).send({})
   } catch (err) {
-    emailRequest.remove()
+    if (emailRequest) {
+      emailRequest.remove()
+    }
     res.status(400).send({})
   }
 })

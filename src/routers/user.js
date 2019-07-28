@@ -10,7 +10,9 @@ router.post('/users/signup', async (req, res) => {
   console.log(user)
   try {
     await user.save()
-    const token = jwt.sign({ email: user.email }, 'SECRETWILLBEHERE', { expiresIn: 60 })
+    const verificationToken = jwt.sign({ email: user.email }, 'SECRETWILLBEHERE', { expiresIn: 3600 })
+    const newEmailRequest = new EmailRequest({ token: verificationToken, owner: user._id })
+    await newEmailRequest.save()
     res.status(201).send(user)
   } catch (e) {
     res.status(400).send(e)
