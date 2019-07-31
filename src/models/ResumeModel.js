@@ -8,6 +8,10 @@ const Resume = mongoose.model('Resume', {
   resume: {
     type: Buffer,
     required: true
+  },
+  submittedAt: {
+    type: Date,
+    default: Date.now
   }
 })
 

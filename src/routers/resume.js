@@ -1,10 +1,10 @@
 const express = require('express')
 const multer = require('multer')
+const objectId = require('mongodb').ObjectID
 const Resume = require('../models/ResumeModel')
 const router = new express.Router()
 const authMiddleware = require('../middleware/authMiddleware')
 
-// POST RESUME
 const upload = multer({
   limits: {
     fileSize: 1000000
@@ -18,11 +18,15 @@ const upload = multer({
 })
 
 router.post('/resumes', authMiddleware, upload.single('resume'), async (req, res) => {
+  if (!req.file) {
+    return res.status(500).send({ error: 'Please upload a file' })
+  }
   const existingResume = await Resume.findOne({ owner: req.user._id })
   if (existingResume) {
     existingResume.resume = req.file.buffer
+    existingResume.submittedAt = new Date()
     await existingResume.save()
-    return res.status(200).send(existingResume)
+    return res.status(201).send(existingResume)
   }
   const resume = new Resume({ owner: req.user._id, resume: req.file.buffer })
   await resume.save()
@@ -31,15 +35,16 @@ router.post('/resumes', authMiddleware, upload.single('resume'), async (req, res
   res.status(400).send({ error: error.message })
 })
 
-// GET RESUME BASED ON OWNER
 router.get('/resumes/:id', authMiddleware, async (req, res) => {
   try {
-    const { id: userID } = req.params // :id is the userID
+    if (!objectId.isValid(req.params.id)) {
+      throw new Error('Invalid userID')
+    }
+    const { id: userID } = req.params
     const resume = await Resume.findOne({ owner: userID })
     if (userID !== req.user._id.toString()) {
       throw new Error()
     }
-    console.log(resume)
     res.status(200).send(resume)
   } catch (err) {
     res.status(500).send({ error: err.message })
