@@ -1,6 +1,6 @@
 const express = require('express')
 const multer = require('multer')
-const objectId = require('mongodb').ObjectID
+const ObjectId = require('mongodb').ObjectID
 const Resume = require('../models/ResumeModel')
 const router = new express.Router()
 const authMiddleware = require('../middleware/authMiddleware')
@@ -37,10 +37,10 @@ router.post('/resumes', authMiddleware, upload.single('resume'), async (req, res
 
 router.get('/resumes/:id', authMiddleware, async (req, res) => {
   try {
-    if (!objectId.isValid(req.params.id)) {
+    const { id: userID } = req.params
+    if (!ObjectId.isValid(userID)) {
       throw new Error('Invalid userID')
     }
-    const { id: userID } = req.params
     const resume = await Resume.findOne({ owner: userID })
     if (userID !== req.user._id.toString()) {
       throw new Error()
