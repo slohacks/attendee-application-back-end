@@ -1,4 +1,5 @@
 const express = require('express')
+const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const EmailRequest = require('../models/EmailRequestModel')
 const User = require('../models/UserModel')
@@ -7,11 +8,11 @@ const router = new express.Router()
 // Post request to add user to database. Expects all required fields in User Schema
 router.post('/users/signup', async (req, res) => {
   const user = new User(req.body)
-  console.log(user)
   try {
     await user.save()
-    const verificationToken = jwt.sign({ email: user.email }, 'SECRETWILLBEHERE', { expiresIn: 3600 })
-    const newEmailRequest = new EmailRequest({ token: verificationToken, owner: user._id })
+    const verificationToken = jwt.sign({ email: user.email }, 'SECRET2WILLBEHERE', { expiresIn: 3600 })
+    const encryptedToken = await bcrypt.hash(verificationToken, 10)
+    const newEmailRequest = new EmailRequest({ token: encryptedToken, owner: user._id })
     await newEmailRequest.save()
     res.status(201).send(user)
   } catch (e) {
