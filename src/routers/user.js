@@ -11,7 +11,8 @@ router.post('/users/signup', async (req, res) => {
   try {
     await user.save()
     const verificationToken = jwt.sign({ email: user.email }, 'SECRET2WILLBEHERE', { expiresIn: 3600 })
-    const encryptedToken = await bcrypt.hash(verificationToken, 10)
+    const uniqueToken = verificationToken.split('.').pop()
+    const encryptedToken = await bcrypt.hash(uniqueToken, 10)
     const newEmailRequest = new EmailRequest({ token: encryptedToken, owner: user._id })
     await newEmailRequest.save()
     res.status(201).send(user)

@@ -21,7 +21,8 @@ router.post('/emails/resend', async (req, res) => {
     }
 
     const verificationToken = jwt.sign({ email }, 'SECRET2WILLBEHERE', { expiresIn: 3600 })
-    const encryptedToken = await bcrypt.hash(verificationToken, 10)
+    const uniqueToken = verificationToken.split('.').pop()
+    const encryptedToken = await bcrypt.hash(uniqueToken, 10)
     const newEmailRequest = new EmailRequest({ token: encryptedToken, owner: user._id })
     await newEmailRequest.save()
     res.status(200).send({})
@@ -43,8 +44,8 @@ router.post('/emails/confirm/:token', async (req, res) => {
     if (!emailRequest) {
       throw new Error('There is no email request with that token')
     }
-
-    const isMatch = await bcrypt.compare(token, emailRequest.token)
+    const uniqueToken = token.split('.').pop()
+    const isMatch = await bcrypt.compare(uniqueToken, emailRequest.token)
     if (!isMatch) {
       throw new Error('Token doesn\'t match a request')
     }
@@ -55,18 +56,22 @@ router.post('/emails/confirm/:token', async (req, res) => {
     await user.save()
     res.status(200).send({})
   } catch (err) {
-    switch (err.name) {
-      case 'TokenExpiredError':
-        const failedTokenInfo = jwt.decode(token)
-        const failedUserRequest = await User.findOne({ email: failedTokenInfo.email })
-        const emailRequest = await EmailRequest.findOne({ owner: failedUserRequest._id })
-        if (emailRequest) {
+    jwt.verify(token, 'SECRET2WILLBEHERE', { ignoreExpiration: true }, async function (errToken, decoded) {
+      if (errToken) {
+        return res.status(200).send({})
+      }
+      const { email } = decoded
+      const { _id } = await User.findOne({ email })
+      const emailRequest = await EmailRequest.findOne({ owner: _id })
+      if (emailRequest) {
+        const uniqueToken = token.split('.').pop()
+        const isMatch = await bcrypt.compare(uniqueToken, emailRequest.token)
+        if (isMatch) {
           emailRequest.remove()
         }
-        return res.status(400).send({})
-      default:
-        return res.status(400).send({})
-    }
+      }
+      return res.status(200).send({})
+    })
   }
 })
 
