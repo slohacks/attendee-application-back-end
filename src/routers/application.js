@@ -1,4 +1,3 @@
-// import modules
 const express = require('express')
 const Application = require('../models/ApplicationModel')
 const router = new express.Router()
