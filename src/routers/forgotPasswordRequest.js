@@ -63,9 +63,9 @@ router.get('/forgot-password/verify/:token', async (req, res) => {
             forgotPasswordRequest.remove()
           }
         }
+        res.status(200).send({ success: false })
       }
     )
-    res.status(200).send({ success: false })
   }
 })
 
@@ -87,6 +87,7 @@ router.post('/forgot-password/confirm/:token', async (req, res) => {
     const { newPassword } = req.body
     user.password = newPassword
     await user.save()
+    await forgotPasswordRequest.remove()
     res.status(200).send({ success: true })
   } catch (err) {
     jwt.verify(
@@ -104,9 +105,9 @@ router.post('/forgot-password/confirm/:token', async (req, res) => {
             forgotPasswordRequest.remove()
           }
         }
+        res.status(200).send({ success: false })
       }
     )
-    res.status(200).send({ success: false })
   }
 })
 
