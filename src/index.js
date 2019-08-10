@@ -4,6 +4,7 @@ const userRouter = require('./routers/user')
 const applicationRouter = require('./routers/application')
 const emailRequestRouter = require('./routers/emailRequest')
 const resumeRouter = require('./routers/resume')
+const forgotPasswordRequestRouter = require('./routers/forgotPasswordRequest')
 const morgan = require('morgan')
 const app = express()
 const port = 4000
@@ -13,6 +14,7 @@ app.use(morgan('combined'))
 app.use(userRouter)
 app.use(applicationRouter)
 app.use(emailRequestRouter)
+app.use(forgotPasswordRequestRouter)
 app.use(resumeRouter)
 
 app.listen(port, () => {
