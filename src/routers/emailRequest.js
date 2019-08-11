@@ -1,9 +1,13 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const router = new express.Router()
+
 const EmailRequest = require('../models/EmailRequestModel')
 const User = require('../models/UserModel')
-const router = new express.Router()
+const { sendVerificationEmail } = require('../services/sendgrid')
+
+const verifyEmailSecretKey = process.env.VERIFY_EMAIL_SECRET_KEY
 
 router.post('/emails/resend', async (req, res) => {
   try {
@@ -20,11 +24,12 @@ router.post('/emails/resend', async (req, res) => {
       await existingEmailRequest.remove()
     }
 
-    const verificationToken = jwt.sign({ email }, 'SECRET2WILLBEHERE', { expiresIn: 3600 })
+    const verificationToken = jwt.sign({ email }, verifyEmailSecretKey, { expiresIn: 3600 })
     const uniqueToken = verificationToken.split('.').pop()
     const encryptedToken = await bcrypt.hash(uniqueToken, 10)
     const newEmailRequest = new EmailRequest({ token: encryptedToken, owner: user._id })
     await newEmailRequest.save()
+    sendVerificationEmail(email, verificationToken)
     res.status(200).send({})
   } catch (err) {
     res.status(200).send({})
@@ -34,7 +39,7 @@ router.post('/emails/resend', async (req, res) => {
 router.post('/emails/confirm/:token', async (req, res) => {
   const { token } = req.params
   try {
-    const tokenInfo = jwt.verify(token, 'SECRET2WILLBEHERE')
+    const tokenInfo = jwt.verify(token, verifyEmailSecretKey)
     const user = await User.findOne({ email: tokenInfo.email })
     if (!user) {
       throw new Error('Token doesn\'t contain an existing user')
@@ -56,22 +61,26 @@ router.post('/emails/confirm/:token', async (req, res) => {
     await user.save()
     res.status(200).send({})
   } catch (err) {
-    jwt.verify(token, 'SECRET2WILLBEHERE', { ignoreExpiration: true }, async function (errToken, decoded) {
-      if (errToken) {
-        return res.status(200).send({})
-      }
-      const { email } = decoded
-      const { _id } = await User.findOne({ email })
-      const emailRequest = await EmailRequest.findOne({ owner: _id })
-      if (emailRequest) {
-        const uniqueToken = token.split('.').pop()
-        const isMatch = await bcrypt.compare(uniqueToken, emailRequest.token)
-        if (isMatch) {
-          emailRequest.remove()
+    jwt.verify(
+      token,
+      verifyEmailSecretKey,
+      { ignoreExpiration: true },
+      async function (errToken, decoded) {
+        if (errToken) {
+          return res.status(200).send({})
         }
-      }
-      return res.status(200).send({})
-    })
+        const { email } = decoded
+        const { _id } = await User.findOne({ email })
+        const emailRequest = await EmailRequest.findOne({ owner: _id })
+        if (emailRequest) {
+          const uniqueToken = token.split('.').pop()
+          const isMatch = await bcrypt.compare(uniqueToken, emailRequest.token)
+          if (isMatch) {
+            emailRequest.remove()
+          }
+        }
+        return res.status(200).send({})
+      })
   }
 })
 
