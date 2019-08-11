@@ -7,7 +7,7 @@ const resumeRouter = require('./routers/resume')
 const forgotPasswordRequestRouter = require('./routers/forgotPasswordRequest')
 const morgan = require('morgan')
 const app = express()
-const port = 4000
+const port = process.env.PORT
 
 app.use(express.json())
 app.use(morgan('combined'))

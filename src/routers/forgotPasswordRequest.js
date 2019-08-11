@@ -2,9 +2,13 @@ const express = require('express')
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
+const router = new express.Router()
+
 const User = require('../models/UserModel')
 const ForgotPasswordRequest = require('../models/ForgotPasswordRequestModel')
-const router = new express.Router()
+const { sendForgotPasswordEmail } = require('../services/sendgrid')
+
+const forgotPasswordSecretKey = process.env.FORGOT_PASSWORD_SECRET_KEY
 
 router.post('/forgot-password/request', async (req, res) => {
   try {
@@ -16,7 +20,7 @@ router.post('/forgot-password/request', async (req, res) => {
     }
 
     const resetToken = crypto.randomBytes(16).toString('hex')
-    const newToken = jwt.sign({ _id: user._id, resetToken }, 'SECRET3WILLBEHERE', { expiresIn: 3600 })
+    const newToken = jwt.sign({ _id: user._id, resetToken }, forgotPasswordSecretKey, { expiresIn: 3600 })
     const encryptedResetToken = await bcrypt.hash(resetToken, 10)
     const existingPasswordResetRequest = await ForgotPasswordRequest.findOne({ owner: user._id })
 
@@ -24,7 +28,7 @@ router.post('/forgot-password/request', async (req, res) => {
       await existingPasswordResetRequest.remove()
     }
 
-    console.log(newToken)
+    sendForgotPasswordEmail(email, newToken)
     const newPasswordResetRequest = new ForgotPasswordRequest({ token: encryptedResetToken, owner: user._id })
     await newPasswordResetRequest.save()
     res.status(200).send({ success: true })
@@ -36,7 +40,7 @@ router.post('/forgot-password/request', async (req, res) => {
 router.get('/forgot-password/verify/:token', async (req, res) => {
   const { token } = req.params
   try {
-    const tokenInfo = jwt.verify(token, 'SECRET3WILLBEHERE')
+    const tokenInfo = jwt.verify(token, forgotPasswordSecretKey)
     const forgotPasswordRequest = await ForgotPasswordRequest.findOne({ owner: tokenInfo._id })
     if (!forgotPasswordRequest) {
       throw new Error('There is no reset password request with that token')
@@ -49,7 +53,8 @@ router.get('/forgot-password/verify/:token', async (req, res) => {
     res.status(200).send({ success: true })
   } catch (err) {
     jwt.verify(
-      token, 'SECRET3WILLBEHERE',
+      token,
+      forgotPasswordSecretKey,
       { ignoreExpiration: true },
       async function (errToken, decodedInfo) {
         if (errToken) {
@@ -72,7 +77,7 @@ router.get('/forgot-password/verify/:token', async (req, res) => {
 router.post('/forgot-password/confirm/:token', async (req, res) => {
   const { token } = req.params
   try {
-    const tokenInfo = jwt.verify(token, 'SECRET3WILLBEHERE')
+    const tokenInfo = jwt.verify(token, forgotPasswordSecretKey)
     const forgotPasswordRequest = await ForgotPasswordRequest.findOne({ owner: tokenInfo._id })
     if (!forgotPasswordRequest) {
       throw new Error('There is no reset password request with that token')
@@ -91,7 +96,8 @@ router.post('/forgot-password/confirm/:token', async (req, res) => {
     res.status(200).send({ success: true })
   } catch (err) {
     jwt.verify(
-      token, 'SECRET3WILLBEHERE',
+      token,
+      forgotPasswordSecretKey,
       { ignoreExpiration: true },
       async function (errToken, decodedInfo) {
         if (errToken) {
