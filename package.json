@@ -6,7 +6,7 @@
   "author": "SLO Hacks",
   "license": "MIT",
   "scripts": {
-    "start": "env-cmd -f ./config/dev. node src/index.js",
+    "start": "node src/index.js",
     "dev": "env-cmd -f ./config/dev.env nodemon src/index.js",
     "lint": "standard ./src/**/*.js"
   },
