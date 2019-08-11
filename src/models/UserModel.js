@@ -8,6 +8,7 @@ const loginSecretKey = process.env.LOGIN_SECRET_KEY
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
+    index: true,
     unique: true,
     required: true,
     trim: true,
