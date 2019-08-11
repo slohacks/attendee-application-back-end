@@ -8,3 +8,10 @@ before_script:
   - npm install -g standard
 script:
   - standard "./src/**/*.js"
+deploy:
+  provider: heroku
+  api_key:
+    secure: $HEROKU_KEY
+  app: slohacks-backend-api
+  on:
+    branch: master
