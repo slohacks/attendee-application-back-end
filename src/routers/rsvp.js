@@ -5,7 +5,7 @@ const authMiddleware = require('../middleware/authMiddleware')
 
 router.post('/rsvp', authMiddleware, async (req, res) => {
   try {
-    const rsvp = new RSVP(req.body);
+    const rsvp = new RSVP(req.body)
     rsvp.owner = req.user._id
     const existingRSVP = await RSVP.findOne({ owner: req.user._id })
     if (existingRSVP) {
