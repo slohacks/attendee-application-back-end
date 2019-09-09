@@ -7,7 +7,6 @@ node_js:
 services: mongodb
 before_script:
   - sleep 15
-  - mongo slohacks-backend-test --eval 'db.users.createIndex( { email: 1 }, { unique: true } );'
   - npm install -g standard
 script:
   - standard "./src/**/*.js"
