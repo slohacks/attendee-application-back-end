@@ -1,5 +1,6 @@
 /* eslint-env jest */
 const request = require('supertest')
+const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 const app = require('../app')
 const User = require('../models/UserModel')
@@ -114,4 +115,8 @@ test('Should allow verified account to log in', async () => {
   expect(signedToken).toEqual(expect.objectContaining({
     _id: user._id.toString()
   }))
+})
+
+afterAll(() => {
+  mongoose.connection.close()
 })

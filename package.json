@@ -10,7 +10,7 @@
     "dev": "env-cmd -f ./config/dev.env nodemon src/index.js",
     "dev:test": "env-cmd -f ./config/test.env jest --watch",
     "lint": "standard ./src/**/*.js",
-    "test": "jest"
+    "test": "cross-env NODE_ENV=test SENDGRID_API_KEY=FAKE_SG_KEY LOGIN_SECRET_KEY=FAKE_LOGIN_KEY FORGOT_PASSWORD_SECRET_KEY=FAKE_FORGOT_PASSWORD_KEY VERIFY_EMAIL_SECRET_KEY=FAKE_VERIFY_EMAIL_KEY MONGODB_URL=mongodb://127.0.0.1:27017/slohacks-backend-test jest"
   },
   "jest": {
     "testEnvironment": "node"
@@ -30,6 +30,7 @@
     "validator": "^11.1.0"
   },
   "devDependencies": {
+    "cross-env": "^5.2.1",
     "cz-conventional-changelog": "^2.1.0",
     "env-cmd": "^9.0.3",
     "jest": "^24.9.0",
