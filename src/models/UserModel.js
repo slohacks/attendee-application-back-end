@@ -29,16 +29,16 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  resetPasswordKey: {
-    type: String,
-    default: null
-  },
-  verifyTime: {
+  verifyEmailTimestamp: {
     type: Date,
     default: null
   },
-  resetPasswordTime: {
-    type: String,
+  resetPasswordTimestamp: {
+    type: Date,
+    default: null
+  },
+  lastLoginTimestamp: {
+    type: Date,
     default: null
   }
 })
