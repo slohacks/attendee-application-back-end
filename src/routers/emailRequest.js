@@ -57,7 +57,7 @@ router.post('/emails/confirm/:token', async (req, res) => {
 
     emailRequest.remove()
     user.emailVerified = true
-    user.verifyTime = Date.now()
+    user.verifyEmailTimestamp = Date.now()
     await user.save()
     res.status(200).send({ success: true })
   } catch (err) {

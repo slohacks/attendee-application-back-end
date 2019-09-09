@@ -91,6 +91,7 @@ router.post('/forgot-password/confirm/:token', async (req, res) => {
     const user = await User.findOne({ _id: tokenInfo._id })
     const { newPassword } = req.body
     user.password = newPassword
+    user.resetPasswordTimestamp = Date.now()
     await user.save()
     await forgotPasswordRequest.remove()
     res.status(200).send({ success: true })
