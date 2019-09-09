@@ -8,6 +8,7 @@ before_script:
   - npm install -g standard
 script:
   - standard "./src/**/*.js"
+  - npm run test
 deploy:
   provider: heroku
   api_key:
