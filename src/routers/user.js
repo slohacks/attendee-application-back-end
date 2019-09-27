@@ -31,7 +31,8 @@ router.post('/users/login', async (req, res) => {
     const token = await user.generateAuthToken()
     user.lastLoginTimestamp = Date.now()
     user.save()
-    res.send({ user, token })
+    const authData = { ...user._doc, token }
+    res.send(authData)
   } catch (error) {
     res.status(400).send({ errorMessage: error.message })
   }

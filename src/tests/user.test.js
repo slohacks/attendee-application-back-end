@@ -96,18 +96,16 @@ test('Should allow verified account to log in', async () => {
     password: userTwo.password
   }).expect(200)
 
-  const user = await User.findById(response.body.user._id)
+  const user = await User.findById(response.body._id)
   expect(user).not.toBeNull()
 
   expect(response.body).toEqual(expect.objectContaining({
-    user: expect.objectContaining({
-      emailVerified: true,
-      verifyEmailTimestamp: null,
-      resetPasswordTimestamp: null,
-      lastLoginTimestamp: expect.any(String),
-      email: userTwo.email,
-      _id: user._id.toString()
-    }),
+    emailVerified: true,
+    verifyEmailTimestamp: null,
+    resetPasswordTimestamp: null,
+    lastLoginTimestamp: expect.any(String),
+    email: userTwo.email,
+    _id: user._id.toString(),
     token: expect.any(String)
   }))
 
