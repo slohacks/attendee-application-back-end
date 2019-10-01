@@ -18,7 +18,6 @@ const upload = multer({
 })
 
 router.post('/resumes', authMiddleware, upload.single('resume'), async (req, res) => {
-  console.log(req)
   if (!req.file) {
     return res.status(500).send({ error: 'Please upload a file' })
   }
@@ -33,8 +32,6 @@ router.post('/resumes', authMiddleware, upload.single('resume'), async (req, res
   await resume.save()
   res.status(201).send(resume)
 }, (error, req, res, next) => {
-  console.log(req.body)
-  console.log(error)
   res.status(400).send({ error: error.message })
 })
 
