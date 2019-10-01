@@ -18,6 +18,7 @@ const upload = multer({
 })
 
 router.post('/resumes', authMiddleware, upload.single('resume'), async (req, res) => {
+  console.log(req)
   if (!req.file) {
     return res.status(500).send({ error: 'Please upload a file' })
   }
