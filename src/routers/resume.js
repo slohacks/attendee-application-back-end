@@ -33,6 +33,8 @@ router.post('/resumes', authMiddleware, upload.single('resume'), async (req, res
   await resume.save()
   res.status(201).send(resume)
 }, (error, req, res, next) => {
+  console.log(req.body)
+  console.log(error)
   res.status(400).send({ error: error.message })
 })
 
