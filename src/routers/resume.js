@@ -17,9 +17,9 @@ const upload = multer({
   }
 })
 
-router.post('/resumes', authMiddleware, upload.single('resume'), async (req, res) => {
+router.post('/resumes', authMiddleware, upload.single('resume'), async (req, res, next) => {
   if (!req.file) {
-    return res.status(500).send({ error: 'Please upload a file' })
+    return next(new Error('Please upload a file'))
   }
   const existingResume = await Resume.findOne({ owner: req.user._id })
   if (existingResume) {
@@ -32,7 +32,7 @@ router.post('/resumes', authMiddleware, upload.single('resume'), async (req, res
   await resume.save()
   res.status(201).send(resume)
 }, (error, req, res, next) => {
-  res.status(400).send({ error: error.message })
+  res.status(400).send({ errorMessage: error.message })
 })
 
 router.get('/resumes/:id', authMiddleware, async (req, res) => {
