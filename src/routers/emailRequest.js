@@ -30,9 +30,9 @@ router.post('/emails/resend', async (req, res) => {
     const newEmailRequest = new EmailRequest({ token: encryptedToken, owner: user._id })
     await newEmailRequest.save()
     sendVerificationEmail(email, verificationToken)
-    res.status(200).send({})
+    res.status(200).send({ success: true })
   } catch (err) {
-    res.status(200).send({})
+    res.status(200).send({ success: true })
   }
 })
 
@@ -57,9 +57,9 @@ router.post('/emails/confirm/:token', async (req, res) => {
 
     emailRequest.remove()
     user.emailVerified = true
-    user.verifyTime = Date.now()
+    user.verifyEmailTimestamp = Date.now()
     await user.save()
-    res.status(200).send({})
+    res.status(200).send({ success: true })
   } catch (err) {
     jwt.verify(
       token,
@@ -67,7 +67,7 @@ router.post('/emails/confirm/:token', async (req, res) => {
       { ignoreExpiration: true },
       async function (errToken, decoded) {
         if (errToken) {
-          return res.status(200).send({})
+          return res.status(200).send({ success: false })
         }
         const { email } = decoded
         const { _id } = await User.findOne({ email })
@@ -79,7 +79,7 @@ router.post('/emails/confirm/:token', async (req, res) => {
             emailRequest.remove()
           }
         }
-        return res.status(200).send({})
+        return res.status(200).send({ success: false })
       })
   }
 })

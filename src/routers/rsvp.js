@@ -18,13 +18,18 @@ router.post('/rsvp', authMiddleware, async (req, res) => {
   }
 })
 
-router.get('/rsvp/', authMiddleware, async (req, res) => {
+router.get('/rsvp/:id', authMiddleware, async (req, res) => {
   try {
-    const rsvp = await RSVP.findOne({ owner: req.user._id })
+    const { id: userID } = req.params
+    const rsvp = await RSVP.findOne({ owner: userID })
+    if ((!req.admin && userID !== req.user._id.toString())) {
+      throw new Error()
+    }
     if (!rsvp) {
       res.status(404).send({})
+    } else {
+      res.status(200).send(rsvp)
     }
-    res.status(200).send(rsvp)
   } catch (err) {
     res.status(500).send({ errorMessage: err.message })
   }

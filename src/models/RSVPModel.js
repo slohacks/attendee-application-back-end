@@ -14,9 +14,8 @@ const RSVP = mongoose.model('RSVP', {
     min: 0,
     max: 4,
     required: function () { return this.attending }
-
   },
-  travelType: {
+  transportation: {
     type: Number,
     min: 0,
     max: 2,
@@ -39,7 +38,6 @@ const RSVP = mongoose.model('RSVP', {
     min: 0,
     max: 2,
     required: function () { return this.attending && this.bus === 1 }
-
   },
   flight: {
     type: String,

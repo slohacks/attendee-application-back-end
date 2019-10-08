@@ -4,10 +4,13 @@ branches:
 language: node_js
 node_js:
   - "node"
+services: mongodb
 before_script:
+  - sleep 15
   - npm install -g standard
 script:
   - standard "./src/**/*.js"
+  - npm run test
 deploy:
   provider: heroku
   api_key:
