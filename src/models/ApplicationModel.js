@@ -2,29 +2,24 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 
 const Application = mongoose.model('Application', {
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+  },
   name: {
     type: String,
     required: true,
     trim: true
   },
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true
-  },
-  gender: {
-    type: Number,
-    required: true,
-    min: 0,
-    max: 3
-  },
-  major: {
+  email: {
     type: String,
     required: true,
-    trim: true
-  },
-  mlh: {
-    type: Boolean,
-    required: true
+    trim: true,
+    validate (value) {
+      if (!validator.isEmail(value)) {
+        throw new Error('Email is invalid')
+      }
+    }
   },
   phoneNumber: {
     type: String,
@@ -36,13 +31,13 @@ const Application = mongoose.model('Application', {
       }
     }
   },
-  timestamp: {
-    type: Date,
-    default: Date.now(),
-    required: true
+  university: {
+    type: String,
+    required: true,
+    trim: true
   },
-  grad_date: {
-    type: Number,
+  major: {
+    type: String,
     required: true,
     trim: true
   },
@@ -52,29 +47,25 @@ const Application = mongoose.model('Application', {
     min: 1,
     max: 5
   },
-  allergies: {
-    type: String,
-    trim: true
-  },
-  college: {
+  shirtSize: {
     type: String,
     required: true,
     trim: true
   },
   ethnicity: {
-    type: Number,
-    required: true,
-    min: 0,
-    max: 6
-  },
-  city: {
     type: String,
     required: true,
     trim: true
   },
-  age: {
-    type: Boolean,
-    required: true
+  gender: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  pronouns: {
+    type: String,
+    required: true,
+    trim: true
   },
   github: {
     type: String,
@@ -84,28 +75,57 @@ const Application = mongoose.model('Application', {
     type: String,
     trim: true
   },
-  website: {
+  personalSite: {
     type: String,
     trim: true
   },
-  diet: {
-    type: Number,
-    min: 0,
-    max: 4
-  },
-  misc: {
+  otherSite: {
     type: String,
     trim: true
   },
-  project: {
+  originCity: {
+    type: String,
+    required: true
+  },
+  campusParking: {
+    type: Boolean,
+    required: true
+  },
+  travelSponsorship: {
+    type: Boolean,
+    required: true
+  },
+  validAge: {
+    type: Boolean,
+    required: true
+  },
+  dietaryRestrictions: {
     type: String,
     required: true,
     trim: true
   },
-  challenge: {
+  allergies: {
+    type: String,
+    required: true
+  },
+  referral: {
     type: String,
     required: true,
     trim: true
+  },
+  personalProject: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  hackathonGoal: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  mlhSignature: {
+    type: Boolean,
+    required: true
   }
 })
 
