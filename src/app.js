@@ -8,6 +8,7 @@ const forgotPasswordRequestRouter = require('./routers/forgotPasswordRequest')
 const morgan = require('morgan')
 const app = express()
 const cors = require('cors')
+const incompleteApplicationRouter = require('./routers/incompleteApplication')
 
 app.use(cors())
 
@@ -18,5 +19,6 @@ app.use(applicationRouter)
 app.use(emailRequestRouter)
 app.use(forgotPasswordRequestRouter)
 app.use(resumeRouter)
+app.use(incompleteApplicationRouter)
 
 module.exports = app
