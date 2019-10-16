@@ -3,7 +3,7 @@ const IncompleteApplication = require('../models/IncompleteApplicationModel')
 const router = new express.Router()
 const authMiddleware = require('../middleware/authMiddleware')
 
-router.put('/incomplete-applications/saves', authMiddleware, async (req, res) => {
+router.put('/incomplete-applications', authMiddleware, async (req, res) => {
   try {
     const existingIncompleteApp = await IncompleteApplication.findOne({ owner: req.user._id })
     if (existingIncompleteApp) {
@@ -28,7 +28,7 @@ router.put('/incomplete-applications/saves', authMiddleware, async (req, res) =>
   }
 })
 
-router.get('/incomplete-applications/saves/request', authMiddleware, async (req, res) => {
+router.get('/incomplete-applications/request', authMiddleware, async (req, res) => {
   try {
     const owner = req.user._id
     const incompleteApp = await IncompleteApplication.findOne({ owner })
