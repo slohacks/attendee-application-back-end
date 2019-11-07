@@ -3,7 +3,7 @@ branches:
   - master
 language: node_js
 node_js:
-  - "node"
+  - 11
 services: mongodb
 before_script:
   - sleep 15
