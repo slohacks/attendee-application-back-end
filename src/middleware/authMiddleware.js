@@ -12,6 +12,9 @@ const authMiddleware = async (req, res, next) => {
     if (!user || !user.emailVerified) {
       throw new Error('Unable to authenticate user')
     }
+    if (user.email.split('@')[1] === 'slohacks.com') {
+      req.admin = true
+    }
 
     req.token = token
     req.user = user
