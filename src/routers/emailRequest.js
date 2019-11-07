@@ -67,7 +67,7 @@ router.post('/emails/confirm/:token', async (req, res) => {
       { ignoreExpiration: true },
       async function (errToken, decoded) {
         if (errToken) {
-          return res.status(200).send({ success: false })
+          return res.status(400).send({ success: false })
         }
         const { email } = decoded
         const { _id } = await User.findOne({ email })
@@ -79,7 +79,7 @@ router.post('/emails/confirm/:token', async (req, res) => {
             emailRequest.remove()
           }
         }
-        return res.status(200).send({ success: false })
+        return res.status(400).send({ success: false })
       })
   }
 })
