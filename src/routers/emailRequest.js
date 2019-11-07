@@ -10,8 +10,10 @@ const { sendVerificationEmail } = require('../services/sendgrid')
 const verifyEmailSecretKey = process.env.VERIFY_EMAIL_SECRET_KEY
 
 router.post('/emails/resend', async (req, res) => {
+  const { token } = req.body
   try {
-    const { email } = req.body
+    const tokenInfo = jwt.verify(token, verifyEmailSecretKey, { ignoreExpiration: true })
+    const { email } = tokenInfo
     const user = await User.findOne({ email })
 
     if (!user) {
