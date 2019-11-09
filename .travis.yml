@@ -3,21 +3,21 @@ branches:
   - master
 language: node_js
 node_js:
-  - 11
+- 11
 services: mongodb
 before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.12.3
-  - export PATH="$HOME/.yarn/bin:$PATH"
+- curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.12.3
+- export PATH="$HOME/.yarn/bin:$PATH"
 before_script:
-  - sleep 15
-  - npm install -g standard
+- sleep 15
+- npm install -g standard
 script:
-  - standard "./src/**/*.js"
-  - npm run test
+- standard "./src/**/*.js"
+- npm run test
 deploy:
   provider: heroku
   api_key:
-    secure: $HEROKU_KEY
+    secure: MU361vToeePD0tSm09OPSkQkoKjUmASNNhhZieKTWudQIOxoAyVARluuzz15N8SilExWHucsGjT9GfHtIOeRm2zyZyvM7V1KUmNRe/xB96kD7FUgvx2XXRWvNEbmZCGZpClAWGSwTXHaIPfrVlfTU6sKh9TsLqvzk9YIK4tb6x5c4x54OVaIKZlE9QaVJx4uIiBNRwiTEW8JutvRFZKh8RkKfgT1VtZUsyKKEDbaE19f7t48E5gDGOY0Iz/AfPC7avEIbKKma44p7rk69U3Tdg/TYjkCrd6Jm80ztoEeQ1d70VoU3vJVemgRrPLwPfIm8W92JC9YqRZne0hNUKZv5U4G5WBBLhmfpqXFRNdYkb2C2de7uZBo/M9arLEK583+SXuTNH0pQg6KAy2DYW77oYKh5z2wh2JahoFDx2abW87mEPqHjBAKLesf4+AOehcdg8QSeKOwzqTiIA7VClPMNxk3jdG8g1EHG6JZBZfk0ITNzC49ht3MkbnFVVOHNgxpXhSHKZHces9ePQBExDtv5eKidaFfblYrmXGDcwJppOK5GrwiXthQnn2nqOt1kEOrhU46dFBmoAOlslvDSH/zzOPPgQ04DQSCdCAvttIc1l3do2G3YNXqqZGMAc+0Ht+zC4uWLfbk+XqCVHhB0L7ciEeCPGfDfACU6YSz1bewo9o=
   app: slohacks-backend-api
   on:
     branch: master
