@@ -5,12 +5,16 @@ const emailEnvironment = ['production', 'development']
 
 const sendVerificationEmail = (email, token) => {
   if (emailEnvironment.includes(process.env.NODE_ENV)) {
-    const link = process.env.NODE_ENV === 'production' ? `https://apply.slohacks.com/email/verify?token=${token}` : `localhost:8080/email/verify?token=${token}`
+    const link = process.env.NODE_ENV === 'production' ? `https://apply.slohacks.com/#/email/verify?token=${token}` : `localhost:8080/#/email/verify?token=${token}`
     sgMail.send({
       to: email,
       from: 'team@slohacks.com',
       subject: 'SLO Hacks Verification Link',
-      text: `The token below will allow you to verify your account.\n${link}\nThe token expires after 1 hour.`
+      text: `
+      The token below will allow you to verify your account.
+      ${link}
+      The token expires after 1 hour.
+      `
     })
   }
 }
