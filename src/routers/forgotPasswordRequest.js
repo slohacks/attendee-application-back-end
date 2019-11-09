@@ -58,7 +58,7 @@ router.get('/forgot-password/verify/:token', async (req, res) => {
       { ignoreExpiration: true },
       async function (errToken, decodedInfo) {
         if (errToken) {
-          return res.status(200).send({ success: false })
+          return res.status(400).send({ success: false })
         }
         const { _id, resetToken } = decodedInfo
         const forgotPasswordRequest = await ForgotPasswordRequest.findOne({ owner: _id })
@@ -68,7 +68,7 @@ router.get('/forgot-password/verify/:token', async (req, res) => {
             forgotPasswordRequest.remove()
           }
         }
-        res.status(200).send({ success: false })
+        res.status(400).send({ success: false })
       }
     )
   }
@@ -102,7 +102,7 @@ router.post('/forgot-password/confirm/:token', async (req, res) => {
       { ignoreExpiration: true },
       async function (errToken, decodedInfo) {
         if (errToken) {
-          return res.status(200).send({ success: false })
+          return res.status(400).send({ success: false })
         }
         const { _id, resetToken } = decodedInfo
         const forgotPasswordRequest = await ForgotPasswordRequest.findOne({ owner: _id })
@@ -112,7 +112,7 @@ router.post('/forgot-password/confirm/:token', async (req, res) => {
             forgotPasswordRequest.remove()
           }
         }
-        res.status(200).send({ success: false })
+        res.status(400).send({ success: false })
       }
     )
   }
