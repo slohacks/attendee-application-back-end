@@ -25,11 +25,10 @@ const sendForgotPasswordEmail = (email, token) => {
     sgMail.send({
       to: email,
       from: 'team@slohacks.com',
-      subject: 'SLO Hacks Reset Password',
-      text: `
-      Please click the link below to change your password
-      ${link}
-      The link will expire after 1 hour.`
+      templateId: 'd-da5bb3fc3201487f9276a78276ac8d87',
+      dynamic_template_data: {
+        link
+      }
     })
   }
 }
