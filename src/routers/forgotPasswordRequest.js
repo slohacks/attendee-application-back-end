@@ -89,8 +89,13 @@ router.post('/forgot-password/confirm/:token', async (req, res) => {
     }
 
     const user = await User.findOne({ _id: tokenInfo._id })
-    const { newPassword } = req.body
-    user.password = newPassword
+    const { password, confirmPassword } = req.body
+
+    if (password !== confirmPassword) {
+      throw new Error('Passwords do not match.')
+    }
+
+    user.password = confirmPassword
     user.resetPasswordTimestamp = Date.now()
     await user.save()
     await forgotPasswordRequest.remove()
@@ -112,9 +117,10 @@ router.post('/forgot-password/confirm/:token', async (req, res) => {
             forgotPasswordRequest.remove()
           }
         }
-        res.status(400).send({ success: false })
+        return res.status(400).send({ success: false })
       }
     )
+    res.status(400).send({ success: false })
   }
 })
 
