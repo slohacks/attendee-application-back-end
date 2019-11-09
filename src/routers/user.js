@@ -20,8 +20,11 @@ router.post('/users/signup', async (req, res) => {
     await newEmailRequest.save()
     sendVerificationEmail(user.email, verificationToken)
     res.status(201).send(user)
-  } catch (e) {
-    res.status(400).send(e)
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).send({ errorMessage: 'The email you entered is already in use.' })
+    }
+    res.status(400).send({ errorMessage: error.message })
   }
 })
 
