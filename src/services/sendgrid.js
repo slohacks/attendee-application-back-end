@@ -10,7 +10,11 @@ const sendVerificationEmail = (email, token) => {
       to: email,
       from: 'team@slohacks.com',
       subject: 'SLO Hacks Verification Link',
-      text: `The token below will allow you to verify your account.\n${link}\nThe token expires after 1 hour.`
+      text: `
+      The token below will allow you to verify your account.
+      ${link}
+      The token expires after 1 hour.
+      `
     })
   }
 }
