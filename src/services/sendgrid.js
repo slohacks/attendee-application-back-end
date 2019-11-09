@@ -11,9 +11,9 @@ const sendVerificationEmail = (email, token) => {
       from: 'team@slohacks.com',
       subject: 'SLO Hacks Verification Link',
       text: `
-      The token below will allow you to verify your account.
+      Please click the link below to verify your email address
       ${link}
-      The token expires after 1 hour.
+      The link expires after 1 hour.
       `
     })
   }
@@ -21,11 +21,15 @@ const sendVerificationEmail = (email, token) => {
 
 const sendForgotPasswordEmail = (email, token) => {
   if (emailEnvironment.includes(process.env.NODE_ENV)) {
+    const link = process.env.NODE_ENV === 'production' ? `https://apply.slohacks.com/#/forgot-password/verify?token=${token}` : `localhost:8080/#/forgot-password/verify?token=${token}`
     sgMail.send({
       to: email,
       from: 'team@slohacks.com',
       subject: 'SLO Hacks Reset Password',
-      text: `The token will below will allow you to reset your password.\n${token}\nThe token expires after 1 hour.`
+      text: `
+      Please click the link below to change your password
+      ${link}
+      The link will expire after 1 hour.`
     })
   }
 }
