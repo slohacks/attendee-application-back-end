@@ -5,7 +5,7 @@ const emailEnvironment = ['production', 'development']
 
 const sendVerificationEmail = (email, token) => {
   if (emailEnvironment.includes(process.env.NODE_ENV)) {
-    const link = process.env.NODE_ENV === 'production' ? `https://apply.slohacks.com/email/verify?token=${token}` : `localhost:8080/email/verify?token=${token}`
+    const link = process.env.NODE_ENV === 'production' ? `https://apply.slohacks.com/#/email/verify?token=${token}` : `localhost:8080/#/email/verify?token=${token}`
     sgMail.send({
       to: email,
       from: 'team@slohacks.com',
